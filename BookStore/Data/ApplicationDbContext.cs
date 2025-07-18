@@ -11,5 +11,29 @@ namespace BookStore.Data
         }
 
         public DbSet<Category> Categories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Category>().HasData(
+                new Category
+                {
+                    Id = 1,
+                    Name = "Action",
+                    Displayorder = 1
+                },
+                new Category
+                {
+                    Id = 2,
+                    Name = "Science Fiction",
+                    Displayorder = 2
+                },
+                new Category
+                {
+                    Id = 3,
+                    Name = "Romance",
+                    Displayorder = 3
+                }
+                );
+        }
     }
 }
