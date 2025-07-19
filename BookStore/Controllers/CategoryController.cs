@@ -1,22 +1,22 @@
-﻿using BookStore.Data;
+﻿
+using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
+using BookStoreDataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
     public class CategoryController : Controller
     {
-        // Injecting the ApplicationDbContext to interact with the database
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+
+        private readonly IUnitOfWork unitOfWork;
+        public CategoryController(IUnitOfWork db)
         {
-            _db = db;
+            unitOfWork = db;
         }
         public IActionResult Index()
         {
-            var categories = _db.Categories
-                .OrderBy(c => c.Displayorder)
-                .ToList();
+            var categories = unitOfWork.Category.GetAll();
             return View(categories);
         }
 
@@ -43,8 +43,10 @@ namespace BookStore.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(category);
-                _db.SaveChanges();
+                unitOfWork.Category.Add(category);
+                unitOfWork.Save();
+
+                TempData["success"] = "Category created successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -56,7 +58,7 @@ namespace BookStore.Controllers
             {
                 return NotFound();
             }
-            var category = _db.Categories.Find(id);
+            var category = unitOfWork.Category.Get(p => p.Id == id);
             if (category == null)
             {
                 return NotFound();
@@ -82,8 +84,38 @@ namespace BookStore.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(category);
-                _db.SaveChanges();
+                unitOfWork.Category.Update(category);
+                unitOfWork.Save();
+
+                TempData["success"] = "Category updated successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(category);
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var category = unitOfWork.Category.Get(p => p.Id == id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
+        }
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePost(int? id)
+        {
+            var category = unitOfWork.Category.Get(p => p.Id == id);
+            if (category != null && ModelState.IsValid)
+            {
+                unitOfWork.Category.Remove(category);
+                unitOfWork.Save();
+
+                TempData["success"] = "Category deleted successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
