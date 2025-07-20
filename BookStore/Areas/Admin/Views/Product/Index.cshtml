@@ -1,0 +1,45 @@
+﻿@using BookStore.Models
+@model IEnumerable<Product>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col col-md-6"><h2>Product List</h2></div>
+        <div class="col col-md-6 text-end">
+
+            <a asp-area="Admin" asp-controller="Product" asp-action="Create" class="btn btn-primary">Create New Product</a>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Product Title</th>
+            <th>ISBN</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>List Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Title</td>
+                <td>@product.ISBN</td>
+                <td>@product.Author</td>
+                <td>@product.Category.Name</td>
+                <td>@product.ListPrice</td>
+                <td>
+                    <a asp-area="Admin" asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-info">Edit</a>
+                    <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>

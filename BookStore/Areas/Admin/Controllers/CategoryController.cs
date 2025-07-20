@@ -1,11 +1,10 @@
-﻿
-using BookStore.DataAccess.Repository.IRepository;
+﻿using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
-using BookStoreDataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookStore.Controllers
+namespace BookStore.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
 
@@ -46,7 +45,7 @@ namespace BookStore.Controllers
                 unitOfWork.Category.Add(category);
                 unitOfWork.Save();
 
-                TempData["success"] = "Category created successfully";
+                TempData["success"] = "Record created successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -87,7 +86,7 @@ namespace BookStore.Controllers
                 unitOfWork.Category.Update(category);
                 unitOfWork.Save();
 
-                TempData["success"] = "Category updated successfully";
+                TempData["success"] = "Record updated successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -115,7 +114,7 @@ namespace BookStore.Controllers
                 unitOfWork.Category.Remove(category);
                 unitOfWork.Save();
 
-                TempData["success"] = "Category deleted successfully";
+                TempData["success"] = "Record deleted successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
